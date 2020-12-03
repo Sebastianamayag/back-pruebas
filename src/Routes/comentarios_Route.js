@@ -3,7 +3,7 @@ const app=express();
 const {Comment}=require('../Config/sequealize');
 const { check, validationResult } = require('express-validator');
 //ruta para crear un estudiante o profesor
-app.post('/comment/create/coment',
+app.post('/comment/create',
     [
         check('cuerpocomentario', 'El cuerpo del comentario es obligatorio').not().isEmpty(),
         check('usuario', 'El id es obligatorio').not().isEmpty(),
