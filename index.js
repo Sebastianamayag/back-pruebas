@@ -8,6 +8,7 @@ app.use(express.json());
 app.use(cors());
 //Routes
 app.use(require('./App Estidiantes/Routes/estudiantes_Route'));
+app.use(require('./App Estidiantes/Routes/comentarios_Route'));
 //Start Server
 app.listen(app.get('port'),()=>{
     console.log('Servidor corriendo en el puerto',app.get('port'));

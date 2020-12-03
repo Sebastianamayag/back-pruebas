@@ -25,7 +25,8 @@ app.post('/user/create',
                 res.status(200).json({"mensaje":"Usuario creado Correctamente",estudent});
             }
         } 
-    })
+    }
+)
 //ruta pra ingreso de estudiantes
 app.post('/user/login',async(req,res)=>{
     const usuario = await Estudiante.findOne({ where: { usuario: req.body.usuario } });
