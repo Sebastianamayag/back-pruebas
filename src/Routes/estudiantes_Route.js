@@ -2,6 +2,8 @@ const express= require('express');
 const app=express();
 const {Estudiante}=require('../Config/sequealize');
 const bcrypt = require('bcryptjs');
+var moment = require('moment');
+const jwt = require('jwt-simple');
 const { check, validationResult } = require('express-validator');
 //ruta para crear un estudiante o profesor
 app.post('/user/create',
@@ -13,11 +15,11 @@ app.post('/user/create',
     ], async (req, res) => {
         const errors = validationResult(req);
         if(!errors.isEmpty()){ 
-            return res.status(200).json({errores: errors.array()}) 
+            return res.status(400).json({errores: errors.array()}) 
         }else{
             const estudiante = await Estudiante.findOne({ where: { usuario: req.body.usuario } });
             if(estudiante){
-                res.status(200).json({ error: 'Ya existe un usuario llamado : ' + req.body.usuario })
+                res.status(400).json({ error: 'Ya existe un usuario llamado : ' + req.body.usuario })
             }
             else{
                 req.body.contraseña = bcrypt.hashSync(req.body.contraseña, 10);
@@ -33,13 +35,25 @@ app.post('/user/login',async(req,res)=>{
     if (usuario) {
         const iguales = bcrypt.compareSync(req.body.contraseña, usuario.contraseña);
         if (iguales) {
-            res.status(200).json({ success: usuario.usuario  });
+            const token=createToken(usuario);
+            res.status(200).json({ success:usuario,token });
         } else {
-            res.status(200).json({ error: 'Error en usuario y/o contraseña' })
+            res.status(400).json({ error: 'Error en usuario y/o contraseña' })
         }
     } else {
-        res.status(200).json({ error: 'Error en usuario y/o contraseña' })
+        res.status(400).json({ error: 'Error en usuario y/o contraseña' })
     }
-})
+});
+//crear el token de autenticación
+const createToken = (usuario) => {
+    const payload = {
+        usuario: usuario.usuario,
+        idusuario:usuario.id,
+        createdAt: moment().unix(),
+        expiredAt: moment().add(1440, 'minutes').unix()
+    }
+
+    return jwt.encode(payload, 'secret-phrase');
+}
 
 module.exports=app;

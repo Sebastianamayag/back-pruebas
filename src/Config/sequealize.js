@@ -1,10 +1,11 @@
 const Sequelize=require('sequelize');
 //import de los modelos
 const EstudianteModel=require('../Models/estudiantes');
-//configuracion de la url de la bd
-const DBURL ='mysql://root:@localhost:3306/colegio';
 //pasar los parametros de configuracion a sequelize
-const sequelize=new Sequelize(DBURL);
+const sequelize = new Sequelize('A6Ph1XLzs4', 'A6Ph1XLzs4', 'sKhEygjwb8', {
+    host: 'remotemysql.com',
+    dialect: 'mysql'
+});
 //creando la tablas tablas
 const Estudiante=EstudianteModel(sequelize,Sequelize);
 //sincronizando squelize
